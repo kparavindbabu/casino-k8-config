@@ -32,16 +32,16 @@ spec:
               memory: {{ $service.resources.limits.memory }}
               cpu: {{ $service.resources.limits.cpu }}
           env:
-          - name: "AWSParameterStoreCredentials__AccessKey"
-            valueFrom:
-                  secretKeyRef:
-                    name: aws-ssm-credentials
-                    key: accessKey
-          - name: "AWSParameterStoreCredentials__SecretKey"
-            valueFrom:
-                  secretKeyRef:
-                    name: aws-ssm-credentials
-                    key: secretKey
+            - name: "AWSParameterStoreCredentials__AccessKey"
+              valueFrom:
+                    secretKeyRef:
+                      name: aws-ssm-credentials
+                      key: accessKey
+            - name: "AWSParameterStoreCredentials__SecretKey"
+              valueFrom:
+                    secretKeyRef:
+                      name: aws-ssm-credentials
+                      key: secretKey
             {{- range $service.env }}
             - name: {{ .name }}
               value: {{ .value | quote }}
