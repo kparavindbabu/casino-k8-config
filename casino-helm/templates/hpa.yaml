@@ -8,6 +8,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ $.Release.Name }}-{{ .name }}-hpa
+  namespace: default
   labels:
     app: {{ $.Release.Name }}-{{ .name }}
 spec:
