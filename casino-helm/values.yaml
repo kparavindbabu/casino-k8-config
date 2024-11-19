@@ -80,126 +80,125 @@ ingress:
       serviceName: casino-trade-art-ms-service
       servicePort: 80
       path: /
-
-secretProviderClass:
-  name: cms-aws-parameter-store
-  namespace: default
-  provider: aws
-  secrets:
-    - name: ssm-cms-app-secrets
-      type: Opaque
-      parameters:
-        - objectName: "/cms/ADMIN_EMAIL"
-          objectType: "ssmparameter"
-          key: ADMIN_EMAIL
-        - objectName: "/cms/ADMIN_PASSWORD"
-          objectType: "ssmparameter"
-          key: ADMIN_PASSWORD
-        - objectName: "/cms/CACHE_AUTO_PURGE"
-          objectType: "ssmparameter"
-          key: CACHE_AUTO_PURGE
-        - objectName: "/cms/CACHE_ENABLED"
-          objectType: "ssmparameter"
-          key: CACHE_ENABLED
-        - objectName: "/cms/CACHE_STORE"
-          objectType: "ssmparameter"
-          key: CACHE_STORE
-        - objectName: "/cms/CACHE_TTL"
-          objectType: "ssmparameter"
-          key: CACHE_TTL
-        - objectName: "/cms/CONTENT_SECURITY_POLICY_DIRECTIVES__FRAME_SRC"
-          objectType: "ssmparameter"
-          key: CONTENT_SECURITY_POLICY_DIRECTIVES__FRAME_SRC
-        - objectName: "/cms/CONTENT_SECURITY_POLICY_DIRECTIVES__IMG_SRC"
-          objectType: "ssmparameter"
-          key: CONTENT_SECURITY_POLICY_DIRECTIVES__IMG_SRC
-        - objectName: "/cms/CORS_ENABLED"
-          objectType: "ssmparameter"
-          key: CORS_ENABLED
-        - objectName: "/cms/CORS_ORIGIN"
-          objectType: "ssmparameter"
-          key: CORS_ORIGIN
-        - objectName: "/cms/DB_CLIENT"
-          objectType: "ssmparameter"
-          key: DB_CLIENT
-        - objectName: "/cms/DB_CONNECTION_STRING"
-          objectType: "ssmparameter"
-          key: DB_CONNECTION_STRING
-        - objectName: "/cms/EMAIL_FROM"
-          objectType: "ssmparameter"
-          key: EMAIL_FROM
-        - objectName: "/cms/EMAIL_SMTP_HOST"
-          objectType: "ssmparameter"
-          key: EMAIL_SMTP_HOST
-        - objectName: "/cms/EMAIL_SMTP_PASSWORD"
-          objectType: "ssmparameter"
-          key: EMAIL_SMTP_PASSWORD
-        - objectName: "/cms/EMAIL_SMTP_PORT"
-          objectType: "ssmparameter"
-          key: EMAIL_SMTP_PORT
-        - objectName: "/cms/EMAIL_SMTP_USER"
-          objectType: "ssmparameter"
-          key: EMAIL_SMTP_USER
-        - objectName: "/cms/EMAIL_TRANSPORT"
-          objectType: "ssmparameter"
-          key: EMAIL_TRANSPORT
-        - objectName: "/cms/ENV_TYPE"
-          objectType: "ssmparameter"
-          key: ENV_TYPE
-        - objectName: "/cms/FILES_MAX_UPLOAD_SIZE"
-          objectType: "ssmparameter"
-          key: FILES_MAX_UPLOAD_SIZE
-        - objectName: "/cms/KEY"
-          objectType: "ssmparameter"
-          key: KEY
-        - objectName: "/cms/MAX_PAYLOAD_SIZE"
-          objectType: "ssmparameter"
-          key: MAX_PAYLOAD_SIZE
-        - objectName: "/cms/PRESSURE_LIMITER_ENABLED"
-          objectType: "ssmparameter"
-          key: PRESSURE_LIMITER_ENABLED
-        - objectName: "/cms/PUBLIC_URL"
-          objectType: "ssmparameter"
-          key: PUBLIC_URL
-        - objectName: "/cms/REDIS_ENABLED"
-          objectType: "ssmparameter"
-          key: REDIS_ENABLED
-        - objectName: "/cms/REDIS_HOST"
-          objectType: "ssmparameter"
-          key: REDIS_HOST
-        - objectName: "/cms/REDIS_PORT"
-          objectType: "ssmparameter"
-          key: REDIS_PORT
-        - objectName: "/cms/SECRET"
-          objectType: "ssmparameter"
-          key: SECRET
-        - objectName: "/cms/STORAGE_LOCATIONS"
-          objectType: "ssmparameter"
-          key: STORAGE_LOCATIONS
-        - objectName: "/cms/STORAGE_S3_ACL"
-          objectType: "ssmparameter"
-          key: STORAGE_S3_ACL
-        - objectName: "/cms/STORAGE_S3_BUCKET"
-          objectType: "ssmparameter"
-          key: STORAGE_S3_BUCKET
-        - objectName: "/cms/STORAGE_S3_DRIVER"
-          objectType: "ssmparameter"
-          key: STORAGE_S3_DRIVER
-        - objectName: "/cms/STORAGE_S3_ENDPOINT"
-          objectType: "ssmparameter"
-          key: STORAGE_S3_ENDPOINT
-        - objectName: "/cms/STORAGE_S3_KEY"
-          objectType: "ssmparameter"
-          key: STORAGE_S3_KEY
-        - objectName: "/cms/STORAGE_S3_REGION"
-          objectType: "ssmparameter"
-          key: STORAGE_S3_REGION
-        - objectName: "/cms/STORAGE_S3_SECRET"
-          objectType: "ssmparameter"
-          key: STORAGE_S3_SECRET
-        - objectName: "/envs/CMS_URL"
-          objectType: "ssmparameter"
-          key: CMS_URL
-        - objectName: "/cms/test"
-          objectType: "ssmparameter"
-          key: TEST
+# secretProviderClass:
+#   name: cms-aws-parameter-store
+#   namespace: default
+#   provider: aws
+#   secrets:
+#     - name: ssm-cms-app-secrets
+#       type: Opaque
+#       parameters:
+#         - objectName: "/cms/ADMIN_EMAIL"
+#           objectType: "ssmparameter"
+#           key: ADMIN_EMAIL
+#         - objectName: "/cms/ADMIN_PASSWORD"
+#           objectType: "ssmparameter"
+#           key: ADMIN_PASSWORD
+#         - objectName: "/cms/CACHE_AUTO_PURGE"
+#           objectType: "ssmparameter"
+#           key: CACHE_AUTO_PURGE
+#         - objectName: "/cms/CACHE_ENABLED"
+#           objectType: "ssmparameter"
+#           key: CACHE_ENABLED
+#         - objectName: "/cms/CACHE_STORE"
+#           objectType: "ssmparameter"
+#           key: CACHE_STORE
+#         - objectName: "/cms/CACHE_TTL"
+#           objectType: "ssmparameter"
+#           key: CACHE_TTL
+#         - objectName: "/cms/CONTENT_SECURITY_POLICY_DIRECTIVES__FRAME_SRC"
+#           objectType: "ssmparameter"
+#           key: CONTENT_SECURITY_POLICY_DIRECTIVES__FRAME_SRC
+#         - objectName: "/cms/CONTENT_SECURITY_POLICY_DIRECTIVES__IMG_SRC"
+#           objectType: "ssmparameter"
+#           key: CONTENT_SECURITY_POLICY_DIRECTIVES__IMG_SRC
+#         - objectName: "/cms/CORS_ENABLED"
+#           objectType: "ssmparameter"
+#           key: CORS_ENABLED
+#         - objectName: "/cms/CORS_ORIGIN"
+#           objectType: "ssmparameter"
+#           key: CORS_ORIGIN
+#         - objectName: "/cms/DB_CLIENT"
+#           objectType: "ssmparameter"
+#           key: DB_CLIENT
+#         - objectName: "/cms/DB_CONNECTION_STRING"
+#           objectType: "ssmparameter"
+#           key: DB_CONNECTION_STRING
+#         - objectName: "/cms/EMAIL_FROM"
+#           objectType: "ssmparameter"
+#           key: EMAIL_FROM
+#         - objectName: "/cms/EMAIL_SMTP_HOST"
+#           objectType: "ssmparameter"
+#           key: EMAIL_SMTP_HOST
+#         - objectName: "/cms/EMAIL_SMTP_PASSWORD"
+#           objectType: "ssmparameter"
+#           key: EMAIL_SMTP_PASSWORD
+#         - objectName: "/cms/EMAIL_SMTP_PORT"
+#           objectType: "ssmparameter"
+#           key: EMAIL_SMTP_PORT
+#         - objectName: "/cms/EMAIL_SMTP_USER"
+#           objectType: "ssmparameter"
+#           key: EMAIL_SMTP_USER
+#         - objectName: "/cms/EMAIL_TRANSPORT"
+#           objectType: "ssmparameter"
+#           key: EMAIL_TRANSPORT
+#         - objectName: "/cms/ENV_TYPE"
+#           objectType: "ssmparameter"
+#           key: ENV_TYPE
+#         - objectName: "/cms/FILES_MAX_UPLOAD_SIZE"
+#           objectType: "ssmparameter"
+#           key: FILES_MAX_UPLOAD_SIZE
+#         - objectName: "/cms/KEY"
+#           objectType: "ssmparameter"
+#           key: KEY
+#         - objectName: "/cms/MAX_PAYLOAD_SIZE"
+#           objectType: "ssmparameter"
+#           key: MAX_PAYLOAD_SIZE
+#         - objectName: "/cms/PRESSURE_LIMITER_ENABLED"
+#           objectType: "ssmparameter"
+#           key: PRESSURE_LIMITER_ENABLED
+#         - objectName: "/cms/PUBLIC_URL"
+#           objectType: "ssmparameter"
+#           key: PUBLIC_URL
+#         - objectName: "/cms/REDIS_ENABLED"
+#           objectType: "ssmparameter"
+#           key: REDIS_ENABLED
+#         - objectName: "/cms/REDIS_HOST"
+#           objectType: "ssmparameter"
+#           key: REDIS_HOST
+#         - objectName: "/cms/REDIS_PORT"
+#           objectType: "ssmparameter"
+#           key: REDIS_PORT
+#         - objectName: "/cms/SECRET"
+#           objectType: "ssmparameter"
+#           key: SECRET
+#         - objectName: "/cms/STORAGE_LOCATIONS"
+#           objectType: "ssmparameter"
+#           key: STORAGE_LOCATIONS
+#         - objectName: "/cms/STORAGE_S3_ACL"
+#           objectType: "ssmparameter"
+#           key: STORAGE_S3_ACL
+#         - objectName: "/cms/STORAGE_S3_BUCKET"
+#           objectType: "ssmparameter"
+#           key: STORAGE_S3_BUCKET
+#         - objectName: "/cms/STORAGE_S3_DRIVER"
+#           objectType: "ssmparameter"
+#           key: STORAGE_S3_DRIVER
+#         - objectName: "/cms/STORAGE_S3_ENDPOINT"
+#           objectType: "ssmparameter"
+#           key: STORAGE_S3_ENDPOINT
+#         - objectName: "/cms/STORAGE_S3_KEY"
+#           objectType: "ssmparameter"
+#           key: STORAGE_S3_KEY
+#         - objectName: "/cms/STORAGE_S3_REGION"
+#           objectType: "ssmparameter"
+#           key: STORAGE_S3_REGION
+#         - objectName: "/cms/STORAGE_S3_SECRET"
+#           objectType: "ssmparameter"
+#           key: STORAGE_S3_SECRET
+#         - objectName: "/envs/CMS_URL"
+#           objectType: "ssmparameter"
+#           key: CMS_URL
+#         - objectName: "/cms/test"
+#           objectType: "ssmparameter"
+#           key: TEST
