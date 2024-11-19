@@ -1,0 +1,205 @@
+casinoApplications:
+  - category: dotnet
+    services:
+      - type: ClusterIP
+        port: 80
+        containerPort: 3000
+        env:
+          - name: "ASPNETCORE_ENVIRONMENT"
+            value: "Production"
+          - name: "ASPNETCORE_URLS"
+            value: "http://+:3000"
+          # - name: "AWSParameterStoreCredentials__AccessKey"
+          #   value: "XXXXXXXXXXXXXXXXXX"
+          # - name: "AWSParameterStoreCredentials__SecretKey"
+          #   value: "XXXXXXXXXXXXXXXXXXXXXXXXXX"
+        resources:
+          requests:
+            memory: "512Mi" # Kubernetes will reserve 512Mi of memory for this container
+            cpu: "250m" # Kubernetes will reserve 250 millicores (0.25 CPU) for this container
+          limits:
+            memory: "1Gi" # The container can use up to 1Gi of memory before being killed
+            cpu: "500m" # The container can use up to 500 millicores (0.5 CPU) before being throttled
+        hpa:
+          enabled: true
+          minReplicas: 1
+          maxReplicas: 5
+          targetCPUUtilizationPercentage: 80
+          targetMemoryUtilizationPercentage: 75
+        applications:
+          - name: api-gateway
+            image:
+              repository: 975050051202.dkr.ecr.eu-west-1.amazonaws.com/api-gateway-ms
+              tag: fca364f6dc057650cfdb30086260324a3c8c361b
+              pullPolicy: IfNotPresent
+            env:
+              - name: "AWSParameterStoreCredentials__Path"
+                value: "/apigateway/"
+              - name: "Clusters__player-cluster__Destinations__destination1__Address"
+                value: "http://casino-player-ms-service.default.svc.cluster.local/"
+              - name: "Clusters__wallet-cluster__Destinations__destination1__Address"
+                value: "http://casino-wallet-ms-service.default.svc.cluster.local/"
+              - name: "Clusters__game-cluster__Destinations__destination1__Address"
+                value: "http://casino-game-ms-service.default.svc.cluster.local/"
+              - name: "Clusters__sportsbook-cluster__Destinations__destination1__Address"
+                value: "http://casino-sportbook-ms-service.default.svc.cluster.local/"
+              - name: "Clusters__affiliate-cluster__Destinations__destination1__Address"
+                value: "http://casino-affiliate-ms-service.default.svc.cluster.local/"
+
+          - name: player-ms
+            image:
+              repository: 975050051202.dkr.ecr.eu-west-1.amazonaws.com/playermanagement-ms
+              tag: 322c08b430fce19dcce6437d22d2ca6a211d49bf
+              pullPolicy: IfNotPresent
+            env:
+              - name: "AWSParameterStoreCredentials__Path"
+                value: "/playermanagement/"
+
+ingress:
+  enabled: false
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:975050051202:certificate/4d1a1c70-c286-4883-b621-f4eb90c44179
+  hosts:
+    - host: gateway-k8.innovaplay-staging.com
+      serviceName: casino-api-gateway-ms-service
+      servicePort: 80
+      path: /
+    - host: cms-k8.innovaplay-staging.com
+      serviceName: casino-directus-cms-ms-service
+      servicePort: 80
+      path: /
+    - host: fe-k8.innovaplay-staging.com
+      serviceName: casino-root-fe-ms-service
+      servicePort: 80
+      path: /
+    - host: tradeart-k8.innovaplay-staging.com
+      serviceName: casino-trade-art-ms-service
+      servicePort: 80
+      path: /
+
+secretProviderClass:
+  name: cms-aws-parameter-store
+  namespace: default
+  provider: aws
+  secrets:
+    - name: ssm-cms-app-secrets
+      type: Opaque
+      parameters:
+        - objectName: "/cms/ADMIN_EMAIL"
+          objectType: "ssmparameter"
+          key: ADMIN_EMAIL
+        - objectName: "/cms/ADMIN_PASSWORD"
+          objectType: "ssmparameter"
+          key: ADMIN_PASSWORD
+        - objectName: "/cms/CACHE_AUTO_PURGE"
+          objectType: "ssmparameter"
+          key: CACHE_AUTO_PURGE
+        - objectName: "/cms/CACHE_ENABLED"
+          objectType: "ssmparameter"
+          key: CACHE_ENABLED
+        - objectName: "/cms/CACHE_STORE"
+          objectType: "ssmparameter"
+          key: CACHE_STORE
+        - objectName: "/cms/CACHE_TTL"
+          objectType: "ssmparameter"
+          key: CACHE_TTL
+        - objectName: "/cms/CONTENT_SECURITY_POLICY_DIRECTIVES__FRAME_SRC"
+          objectType: "ssmparameter"
+          key: CONTENT_SECURITY_POLICY_DIRECTIVES__FRAME_SRC
+        - objectName: "/cms/CONTENT_SECURITY_POLICY_DIRECTIVES__IMG_SRC"
+          objectType: "ssmparameter"
+          key: CONTENT_SECURITY_POLICY_DIRECTIVES__IMG_SRC
+        - objectName: "/cms/CORS_ENABLED"
+          objectType: "ssmparameter"
+          key: CORS_ENABLED
+        - objectName: "/cms/CORS_ORIGIN"
+          objectType: "ssmparameter"
+          key: CORS_ORIGIN
+        - objectName: "/cms/DB_CLIENT"
+          objectType: "ssmparameter"
+          key: DB_CLIENT
+        - objectName: "/cms/DB_CONNECTION_STRING"
+          objectType: "ssmparameter"
+          key: DB_CONNECTION_STRING
+        - objectName: "/cms/EMAIL_FROM"
+          objectType: "ssmparameter"
+          key: EMAIL_FROM
+        - objectName: "/cms/EMAIL_SMTP_HOST"
+          objectType: "ssmparameter"
+          key: EMAIL_SMTP_HOST
+        - objectName: "/cms/EMAIL_SMTP_PASSWORD"
+          objectType: "ssmparameter"
+          key: EMAIL_SMTP_PASSWORD
+        - objectName: "/cms/EMAIL_SMTP_PORT"
+          objectType: "ssmparameter"
+          key: EMAIL_SMTP_PORT
+        - objectName: "/cms/EMAIL_SMTP_USER"
+          objectType: "ssmparameter"
+          key: EMAIL_SMTP_USER
+        - objectName: "/cms/EMAIL_TRANSPORT"
+          objectType: "ssmparameter"
+          key: EMAIL_TRANSPORT
+        - objectName: "/cms/ENV_TYPE"
+          objectType: "ssmparameter"
+          key: ENV_TYPE
+        - objectName: "/cms/FILES_MAX_UPLOAD_SIZE"
+          objectType: "ssmparameter"
+          key: FILES_MAX_UPLOAD_SIZE
+        - objectName: "/cms/KEY"
+          objectType: "ssmparameter"
+          key: KEY
+        - objectName: "/cms/MAX_PAYLOAD_SIZE"
+          objectType: "ssmparameter"
+          key: MAX_PAYLOAD_SIZE
+        - objectName: "/cms/PRESSURE_LIMITER_ENABLED"
+          objectType: "ssmparameter"
+          key: PRESSURE_LIMITER_ENABLED
+        - objectName: "/cms/PUBLIC_URL"
+          objectType: "ssmparameter"
+          key: PUBLIC_URL
+        - objectName: "/cms/REDIS_ENABLED"
+          objectType: "ssmparameter"
+          key: REDIS_ENABLED
+        - objectName: "/cms/REDIS_HOST"
+          objectType: "ssmparameter"
+          key: REDIS_HOST
+        - objectName: "/cms/REDIS_PORT"
+          objectType: "ssmparameter"
+          key: REDIS_PORT
+        - objectName: "/cms/SECRET"
+          objectType: "ssmparameter"
+          key: SECRET
+        - objectName: "/cms/STORAGE_LOCATIONS"
+          objectType: "ssmparameter"
+          key: STORAGE_LOCATIONS
+        - objectName: "/cms/STORAGE_S3_ACL"
+          objectType: "ssmparameter"
+          key: STORAGE_S3_ACL
+        - objectName: "/cms/STORAGE_S3_BUCKET"
+          objectType: "ssmparameter"
+          key: STORAGE_S3_BUCKET
+        - objectName: "/cms/STORAGE_S3_DRIVER"
+          objectType: "ssmparameter"
+          key: STORAGE_S3_DRIVER
+        - objectName: "/cms/STORAGE_S3_ENDPOINT"
+          objectType: "ssmparameter"
+          key: STORAGE_S3_ENDPOINT
+        - objectName: "/cms/STORAGE_S3_KEY"
+          objectType: "ssmparameter"
+          key: STORAGE_S3_KEY
+        - objectName: "/cms/STORAGE_S3_REGION"
+          objectType: "ssmparameter"
+          key: STORAGE_S3_REGION
+        - objectName: "/cms/STORAGE_S3_SECRET"
+          objectType: "ssmparameter"
+          key: STORAGE_S3_SECRET
+        - objectName: "/envs/CMS_URL"
+          objectType: "ssmparameter"
+          key: CMS_URL
+        - objectName: "/cms/test"
+          objectType: "ssmparameter"
+          key: TEST

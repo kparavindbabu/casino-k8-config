@@ -1,0 +1,22 @@
+{{- range .Values.casinoApplications }}
+{{- range .services }}
+{{- $service := . }}# Capture the current service item for reuse
+  {{- range .applications }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $.Release.Name }}-{{ .name }}-service
+  labels:
+    app: {{ $.Release.Name }}-{{ .name }}
+spec:
+  type: {{ $service.type }}
+  selector:
+    app: {{ $.Release.Name }}-{{ .name }}
+  ports:
+    - protocol: TCP
+      port: {{ $service.port }}
+      targetPort: {{ $service.containerPort }}
+---
+  {{- end }}
+{{- end }}
+{{- end }}

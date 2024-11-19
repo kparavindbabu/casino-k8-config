@@ -1,0 +1,69 @@
+{{- range .Values.casinoApplications }}
+{{- range .services }}
+{{- $service := . }}# Store outer service configuration for reuse
+  {{- range .applications }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $.Release.Name }}-{{ .name }}-deployment
+  labels:
+    app: {{ $.Release.Name }}-{{ .name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $.Release.Name }}-{{ .name }}
+  template:
+    metadata:
+      labels:
+        app: {{ $.Release.Name }}-{{ .name }}
+    spec:
+      containers:
+        - name: {{ .name }}-container
+          image: "{{ .image.repository }}:{{ .image.tag }}"
+          imagePullPolicy: {{ .image.pullPolicy }}
+          ports:
+            - containerPort: {{ $service.containerPort }}
+          resources:
+            requests:
+              memory: {{ $service.resources.requests.memory }}
+              cpu: {{ $service.resources.requests.cpu }}
+            limits:
+              memory: {{ $service.resources.limits.memory }}
+              cpu: {{ $service.resources.limits.cpu }}
+          env:
+          - name: "AWSParameterStoreCredentials__AccessKey"
+            valueFrom:
+                  secretKeyRef:
+                    name: aws-ssm-credentials
+                    key: accessKey
+          - name: "AWSParameterStoreCredentials__SecretKey"
+            valueFrom:
+                  secretKeyRef:
+                    name: aws-ssm-credentials
+                    key: secretKey
+            {{- range $service.env }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+            {{- range .env }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+            {{- if .secrets }}
+            {{- range .secrets }}
+            {{- $secretName := .secretProviderClassName }}
+            {{- range .parameters }}
+            - name: {{ . }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $secretName }}
+                  key: {{ . }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+
+---
+  {{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,32 @@
+Thank you for installing {{ .Chart.Name }}!
+
+Your release "{{ .Release.Name }}" has been successfully deployed.
+
+Here are some useful details:
+
+---
+
+1. **Accessing the Services**
+
+   The following services have been deployed as part of this release:
+
+   {{- range .Values.casinoApplications }}
+   {{- range .services }}
+     {{- $service := . }}
+     {{- range .applications }}
+   - **{{ .name }}**: Accessible at `{{ $.Release.Name }}-{{ .name }}-service` on port {{ $service.port }}
+     {{- end }}
+   {{- end }}
+   {{- end }}
+
+
+   To access these services internally within the cluster, you can use `kubectl port-forward` or access them directly if you're inside the cluster network.
+
+---
+
+2. **Running Connection Tests**
+
+   To verify the connectivity of each service, you can run the following command to execute the Helm tests:
+
+   ```bash
+   helm test {{ .Release.Name }} --namespace {{ .Release.Namespace }}

@@ -1,0 +1,24 @@
+{{- range .Values.casinoApplications }}
+{{- range .services }}
+  {{- $service := . }}
+  {{- range $service.applications }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ $.Release.Name }}-{{ .name }}-test-connection"
+  labels:
+    app: {{ $.Release.Name }}-{{ .name }}
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": hook-succeeded,hook-failed
+spec:
+  containers:
+    - name: test-connection
+      image: curlimages/curl:latest
+      command: ['sh', '-c', 'curl -sf http://{{ $.Release.Name }}-{{ .name }}-service:{{ $service.port }} || exit 1']
+  restartPolicy: Never
+---
+  {{- end }}
+{{- end }}
+{{- end }}
+
